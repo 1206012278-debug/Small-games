@@ -50,7 +50,7 @@ void playermove(char board[ROW][COL] , int row , int col)
     int x , y;
     while(1)
     {
-        printf("请选择你要下棋的位置坐标");
+        printf("请选择你要下棋的位置坐标\n");
         scanf("%d%d",&x,&y);
         if(x <= row && x >= 1 && y <= col && y >= 1)
         {
@@ -61,12 +61,12 @@ void playermove(char board[ROW][COL] , int row , int col)
             }
             else
             {
-                printf("此位置已有棋,请重新选择位置");
+                printf("此位置已有棋,请重新选择位置\n");
             }
         }
         else
         {
-            printf("超出棋盘,请重新选择位置");
+            printf("超出棋盘,请重新选择位置\n");
         }
     }
 }
