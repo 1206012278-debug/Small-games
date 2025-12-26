@@ -1,0 +1,143 @@
+#define _CRT_SECURE_NO_WARNINGS
+#define ROW 9
+#define COL 9
+#define ROWS ROW + 2
+#define COLS COL + 2
+#define EASY_MINE 10
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+
+void menu()
+{
+    printf("**************************************************\n");
+    printf("***********   1.开始游戏     2.结束游戏   ***********\n");
+    printf("**************************************************\n");
+}
+
+void initboard(char board[ROWS][COLS] , int rows , int cols , char set)
+{
+    int i , j;
+    for(i = 0 ; i < rows ; i ++)
+    {
+        for(j = 0 ; j < cols ; j ++)
+        {
+            board[i][j] = set;
+        }
+    }
+}
+
+void set_mine(char board[ROWS][COLS] , int row , int col)
+{
+    int count = EASY_MINE;
+    int x , y;
+    while(count)
+    {
+        x = rand() % row + 1;
+        y = rand() % col + 1;
+        if(board[x][y] == '0')
+        {
+            board[x][y] = '1';
+            count --;
+        }
+    }
+}
+
+void show_board(char board[ROWS][COLS] , int row , int col)
+{
+    int i , j;
+    for(i = 0 ; i <= col ; i ++)
+    {
+        printf("%d ",i);
+    }
+    printf("\n");
+    for(i = 1 ; i <= row ; i ++)
+    {
+        printf("%d ",i);
+        for(j = 1 ; j <= col ; j++)
+        {
+            printf("%c ",board[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int number_of_mine(char board[ROWS][COLS] , int x , int y)
+{
+    return board[x - 1][y - 1] + board[x - 1][y] + board[x - 1][y + 1] + board[x][y - 1] + board[x][y + 1] + board[x + 1][y - 1] + board[x + 1][y] + board[x + 1][y + 1] - 8 * '0';
+}
+
+void find_mine(char board1[ROWS][COLS] , char board2[ROWS][COLS] , int row ,int col)
+{
+    int x , y;
+    int win = ROW * COL - EASY_MINE;
+    while(1)
+    {
+        printf("请输入你选择的坐标\n");
+        scanf("%d%d",&x,&y);
+         if(x >= 1 && x <= row && y >= 1 && y <= col)
+        {
+            if(board1[x][y] == '1')
+            {
+                printf("你踩到了雷，游戏结束\n");
+                break;
+            }
+            else
+            {
+                board2[x][y] = number_of_mine(board1 , x , y) + '0';
+                win --;
+                show_board(board2 , row , col);
+            }
+        }
+        else
+        {
+            printf("选择有误，请重新选择\n");
+        }
+        if(win == 0)
+        {
+            printf("恭喜排雷成功\n");
+            break;
+        }
+    }
+
+}
+
+
+
+void game()
+{
+    char mine[ROWS][COLS] = {0};
+    char show[ROWS][COLS] = {0};
+    initboard(mine , ROWS , COLS , '0');
+    initboard(show , ROWS , COLS , '*');
+    set_mine(mine , ROW , COL);
+    show_board(show , ROW , COL);
+    find_mine(mine , show , ROW , COL);
+}
+
+int main()
+{
+    int option = 0;
+    srand((unsigned int)time(NULL));
+    do
+    {
+        menu();
+        printf("请选择\n");
+        scanf("%d",&option);
+        switch(option)
+        {
+            case 1 :
+                printf("游戏开始\n");
+                game();
+                break;
+            case 2 :
+                printf("游戏结束\n");
+                break;
+            default :
+                printf("输入错误，请重新输入\n");
+                break;
+        }
+    }while(option != 2);
+    return 0;
+}
